@@ -50,3 +50,13 @@ export DB_NAME=""
 pytest
 ```
 
+Alloy DB requires VPC access = needs private pool
+Postgres needs SQL proxy
+
+Unit tests = run with mocks?
+System tests = run with DB connection
+Integration tests = deploy both services and make a request
+
+Do each datastore need tests?
+
+pull in a config from secret manager or update to use secret manager or env vars

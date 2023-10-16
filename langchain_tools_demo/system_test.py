@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,15 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 import flask
 from flask.testing import FlaskClient
+import requests
 
 
-def test_get_index(app: flask.app.Flask, client: FlaskClient) -> None:
-    res = client.get("/")
-    assert res.status_code == 200
+def test_system(app: flask.app.Flask, client: FlaskClient) -> None:
 
+    BASE_URL = os.environ.get("BASE_URL")
+    assert BASE_URL, "Cloud Run service URL not found"
 
-def test_post_index(app: flask.app.Flask, client: FlaskClient) -> None:
-    res = client.post("/")
-    assert res.status_code == 405
+    ID_TOKEN = os.environ.get("ID_TOKEN")
+    assert ID_TOKEN, "Unable to acquire an ID token"
+
+    resp = requests.get(BASE_URL, headers={"Authorization": f"Bearer {ID_TOKEN}"})
+    assert resp.status_code == 200
+    assert resp.text == "Hello, World!"
